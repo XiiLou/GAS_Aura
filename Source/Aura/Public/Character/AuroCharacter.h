@@ -13,5 +13,7 @@ UCLASS()
 class AURA_API AAuroCharacter : public AAuroCharacterBase
 {
 	GENERATED_BODY()
-	
+public:
+	AAuroCharacter();
+	virtual void Tick(float DeltaTime) override;
 };
