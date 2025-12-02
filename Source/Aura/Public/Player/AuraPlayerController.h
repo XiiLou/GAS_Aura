@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "AuroPlayerController.generated.h"
+#include "AuraPlayerController.generated.h"
 
 
 class IEnemyInterface;
@@ -15,11 +15,11 @@ class UInputAction;
  * 
  */
 UCLASS()
-class AURA_API AAuroPlayerController : public APlayerController
+class AURA_API AAuraPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
-	AAuroPlayerController();
+	AAuraPlayerController();
 	virtual void PlayerTick(float DeltaTime) override;
 protected:
 	virtual void BeginPlay() override;

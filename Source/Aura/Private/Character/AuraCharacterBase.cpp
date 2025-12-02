@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Character/AuroCharacterBase.h"
+#include "Character/AuraCharacterBase.h"
 
 // Sets default values
-AAuroCharacterBase::AAuroCharacterBase()
+AAuraCharacterBase::AAuraCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -16,9 +16,13 @@ AAuroCharacterBase::AAuroCharacterBase()
 
 
 // Called when the game starts or when spawned
-void AAuroCharacterBase::BeginPlay()
+void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
+UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}

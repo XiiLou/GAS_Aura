@@ -1,25 +1,25 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Player/AuroPlayerController.h"
+#include "Player/AuraPlayerController.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Interaction/EnemyInterface.h"
 
-AAuroPlayerController::AAuroPlayerController()
+AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
 }
 
-void AAuroPlayerController::PlayerTick(float DeltaTime)
+void AAuraPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 	CursorTrace();
 	
 }
 
-void AAuroPlayerController::CursorTrace()
+void AAuraPlayerController::CursorTrace()
 {
 	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
@@ -75,15 +75,18 @@ void AAuroPlayerController::CursorTrace()
 	
 }
 
-void AAuroPlayerController::BeginPlay()
+void AAuraPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	check(AuraContext);
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
-
-	Subsystem->AddMappingContext(AuraContext, 0);
+	
+	if (Subsystem)
+	{
+		Subsystem->AddMappingContext(AuraContext, 0);
+	}
+	
 
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
@@ -94,16 +97,16 @@ void AAuroPlayerController::BeginPlay()
 	SetInputMode(InputModeData);
 }
 
-void AAuroPlayerController::SetupInputComponent()
+void AAuraPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuroPlayerController::Move);
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
 }
 
-void AAuroPlayerController::Move(const struct FInputActionValue& InputActionValue)
+void AAuraPlayerController::Move(const struct FInputActionValue& InputActionValue)
 {
 	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
 	const FRotator Rotation = GetControlRotation();

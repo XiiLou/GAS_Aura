@@ -1,11 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Character/AuroCharacter.h"
+#include "Character/AuraCharacter.h"
 
+#include "AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/AuraPlayerController.h"
+#include "Player/AuraPlayerState.h"
+#include "UI/HUD/AuraHUD.h"
 
-AAuroCharacter::AAuroCharacter()
+
+AAuraCharacter::AAuraCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
@@ -19,7 +24,7 @@ AAuroCharacter::AAuroCharacter()
 	bUseControllerRotationYaw = false;
 }
 
-void AAuroCharacter::Tick(float DeltaSeconds)
+void AAuraCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
@@ -48,6 +53,39 @@ void AAuroCharacter::Tick(float DeltaSeconds)
 			);
 
 			SetActorRotation(NewRot);
+		}
+	}
+}
+
+void AAuraCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	
+	//Init Ability Actor Info for the Server
+	InitAbilityActorInfo();
+}
+
+void AAuraCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	
+	//Init Ability Actor Info for the Client
+	InitAbilityActorInfo();
+}
+
+void AAuraCharacter::InitAbilityActorInfo()
+{
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this);
+	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
+	AttributeSet = AuraPlayerState->GetAttributeSet();
+
+	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
+	{
+		if (AAuraHUD* AuraHUD = Cast<AAuraHUD>(AuraPlayerController->GetHUD()))
+		{
+			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
 }
